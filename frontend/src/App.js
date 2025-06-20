@@ -723,7 +723,7 @@ const GrantSection = () => (
         Your support helps us explore compassionate solutions and offer tools that uplift those in need.
       </p>
       <a
-        href="mailto:info@evolance.info"
+        href="mailto:founder@evolance.info"
         className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all"
       >
         Contact Us About Grants
