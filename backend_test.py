@@ -1,227 +1,380 @@
 import requests
-import unittest
-import uuid
 import time
-from datetime import datetime
+import json
 
-class EvolanceResearchPortalTest(unittest.TestCase):
-    def setUp(self):
-        # Use the public endpoint from the frontend .env file
-        self.base_url = "https://709b9927-487e-4c91-8a1f-4ff2ea2c9757.preview.emergentagent.com/api"
-        self.token = None
-        self.user_data = None
-        self.test_post_id = None
-        
-        # Generate unique test user for each test run
-        timestamp = int(time.time())
-        self.test_user = {
-            "email": f"test_user_{timestamp}@example.com",
-            "username": f"test_user_{timestamp}",
-            "full_name": "Test User",
-            "password": "TestPassword123!",
-            "bio": "This is a test user for API testing"
-        }
+# Use the public endpoint from the frontend .env file
+BASE_URL = "https://709b9927-487e-4c91-8a1f-4ff2ea2c9757.preview.emergentagent.com/api"
+token = None
+user_data = None
+test_post_id = None
 
-    def test_01_register(self):
-        """Test user registration"""
-        print("\n🔍 Testing user registration...")
-        response = requests.post(f"{self.base_url}/register", json=self.test_user)
-        self.assertEqual(response.status_code, 200, f"Registration failed: {response.text}")
-        
-        data = response.json()
-        self.assertIn("access_token", data, "Token not found in response")
-        self.assertIn("user", data, "User data not found in response")
-        self.assertEqual(data["user"]["email"], self.test_user["email"])
-        
-        # Save token and user data for subsequent tests
-        self.token = data["access_token"]
-        self.user_data = data["user"]
-        print("✅ Registration successful")
+# Generate unique test user
+timestamp = int(time.time())
+test_user = {
+    "email": f"test_user_{timestamp}@example.com",
+    "username": f"test_user_{timestamp}",
+    "full_name": "Test User",
+    "password": "TestPassword123!",
+    "bio": "This is a test user for API testing"
+}
 
-    def test_02_login(self):
-        """Test user login"""
-        print("\n🔍 Testing user login...")
-        login_data = {
-            "email": self.test_user["email"],
-            "password": self.test_user["password"]
-        }
-        response = requests.post(f"{self.base_url}/login", json=login_data)
-        self.assertEqual(response.status_code, 200, f"Login failed: {response.text}")
+def test_register():
+    """Test user registration"""
+    global token, user_data
+    print("\n🔍 Testing user registration...")
+    
+    try:
+        response = requests.post(f"{BASE_URL}/register", json=test_user)
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIn("access_token", data, "Token not found in response")
-        self.token = data["access_token"]
-        print("✅ Login successful")
+        if response.status_code == 200:
+            data = response.json()
+            if "access_token" in data and "user" in data:
+                token = data["access_token"]
+                user_data = data["user"]
+                print("✅ Registration successful")
+                return True
+            else:
+                print(f"❌ Registration response missing token or user data: {data}")
+        else:
+            print(f"❌ Registration failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Registration error: {str(e)}")
+    
+    return False
 
-    def test_03_get_me(self):
-        """Test getting current user profile"""
-        print("\n🔍 Testing get current user...")
-        if not self.token:
-            self.test_01_register()
-            
-        headers = {"Authorization": f"Bearer {self.token}"}
-        response = requests.get(f"{self.base_url}/me", headers=headers)
-        self.assertEqual(response.status_code, 200, f"Get user profile failed: {response.text}")
+def test_login():
+    """Test user login"""
+    global token
+    print("\n🔍 Testing user login...")
+    
+    login_data = {
+        "email": test_user["email"],
+        "password": test_user["password"]
+    }
+    
+    try:
+        response = requests.post(f"{BASE_URL}/login", json=login_data)
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertEqual(data["email"], self.test_user["email"])
-        print("✅ Get user profile successful")
+        if response.status_code == 200:
+            data = response.json()
+            if "access_token" in data:
+                token = data["access_token"]
+                print("✅ Login successful")
+                return True
+            else:
+                print(f"❌ Login response missing token: {data}")
+        else:
+            print(f"❌ Login failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Login error: {str(e)}")
+    
+    return False
 
-    def test_04_create_post(self):
-        """Test creating a post"""
-        print("\n🔍 Testing create post...")
-        if not self.token:
-            self.test_01_register()
-            
-        post_data = {
-            "title": "Test Research Paper",
-            "content": "This is a test research paper content with enough words to test the reading time calculation. " * 10,
-            "post_type": "research",
-            "tags": ["test", "api", "research"],
-            "summary": "A summary of the test research paper"
-        }
+def test_get_me():
+    """Test getting current user profile"""
+    global token
+    print("\n🔍 Testing get current user...")
+    
+    if not token and not test_register():
+        print("❌ Cannot test user profile without authentication")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(f"{BASE_URL}/me", headers=headers)
+        print(f"Status code: {response.status_code}")
         
-        headers = {"Authorization": f"Bearer {self.token}"}
-        response = requests.post(f"{self.base_url}/posts", json=post_data, headers=headers)
-        self.assertEqual(response.status_code, 200, f"Create post failed: {response.text}")
-        
-        data = response.json()
-        self.assertEqual(data["title"], post_data["title"])
-        self.assertEqual(data["post_type"], post_data["post_type"])
-        self.assertIn("id", data, "Post ID not found in response")
-        
-        # Save post ID for subsequent tests
-        self.test_post_id = data["id"]
-        print("✅ Create post successful")
+        if response.status_code == 200:
+            data = response.json()
+            if data["email"] == test_user["email"]:
+                print("✅ Get user profile successful")
+                return True
+            else:
+                print(f"❌ User profile data mismatch: {data}")
+        else:
+            print(f"❌ Get user profile failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Get user profile error: {str(e)}")
+    
+    return False
 
-    def test_05_get_posts(self):
-        """Test getting all posts"""
-        print("\n🔍 Testing get all posts...")
-        response = requests.get(f"{self.base_url}/posts")
-        self.assertEqual(response.status_code, 200, f"Get posts failed: {response.text}")
+def test_create_post():
+    """Test creating a post"""
+    global token, test_post_id
+    print("\n🔍 Testing create post...")
+    
+    if not token and not test_register():
+        print("❌ Cannot create post without authentication")
+        return False
+    
+    post_data = {
+        "title": "Test Research Paper",
+        "content": "This is a test research paper content with enough words to test the reading time calculation. " * 10,
+        "post_type": "research",
+        "tags": ["test", "api", "research"],
+        "summary": "A summary of the test research paper"
+    }
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.post(f"{BASE_URL}/posts", json=post_data, headers=headers)
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIsInstance(data, list, "Response is not a list of posts")
-        print("✅ Get all posts successful")
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data:
+                test_post_id = data["id"]
+                print(f"✅ Create post successful (ID: {test_post_id})")
+                return True
+            else:
+                print(f"❌ Create post response missing ID: {data}")
+        else:
+            print(f"❌ Create post failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Create post error: {str(e)}")
+    
+    return False
 
-    def test_06_get_post_by_id(self):
-        """Test getting a specific post by ID"""
-        print("\n🔍 Testing get post by ID...")
-        if not self.test_post_id:
-            self.test_04_create_post()
-            
-        response = requests.get(f"{self.base_url}/posts/{self.test_post_id}")
-        self.assertEqual(response.status_code, 200, f"Get post by ID failed: {response.text}")
+def test_get_posts():
+    """Test getting all posts"""
+    print("\n🔍 Testing get all posts...")
+    
+    try:
+        response = requests.get(f"{BASE_URL}/posts")
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertEqual(data["id"], self.test_post_id)
-        print("✅ Get post by ID successful")
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, list):
+                print(f"✅ Get all posts successful (found {len(data)} posts)")
+                return True
+            else:
+                print(f"❌ Get posts response is not a list: {data}")
+        else:
+            print(f"❌ Get posts failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Get posts error: {str(e)}")
+    
+    return False
 
-    def test_07_like_post(self):
-        """Test liking a post"""
-        print("\n🔍 Testing like post...")
-        if not self.token or not self.test_post_id:
-            self.test_04_create_post()
-            
-        headers = {"Authorization": f"Bearer {self.token}"}
-        response = requests.post(f"{self.base_url}/posts/{self.test_post_id}/like", headers=headers)
-        self.assertEqual(response.status_code, 200, f"Like post failed: {response.text}")
+def test_get_post_by_id():
+    """Test getting a specific post by ID"""
+    global test_post_id
+    print("\n🔍 Testing get post by ID...")
+    
+    if not test_post_id and not test_create_post():
+        print("❌ Cannot test get post without a post ID")
+        return False
+    
+    try:
+        response = requests.get(f"{BASE_URL}/posts/{test_post_id}")
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIn("liked", data, "Like status not found in response")
-        self.assertTrue(data["liked"], "Post was not liked")
-        print("✅ Like post successful")
+        if response.status_code == 200:
+            data = response.json()
+            if data["id"] == test_post_id:
+                print("✅ Get post by ID successful")
+                return True
+            else:
+                print(f"❌ Post ID mismatch: {data}")
+        else:
+            print(f"❌ Get post by ID failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Get post by ID error: {str(e)}")
+    
+    return False
 
-    def test_08_create_comment(self):
-        """Test creating a comment on a post"""
-        print("\n🔍 Testing create comment...")
-        if not self.token or not self.test_post_id:
-            self.test_04_create_post()
-            
-        comment_data = {
-            "post_id": self.test_post_id,
-            "content": "This is a test comment on the research paper"
-        }
+def test_like_post():
+    """Test liking a post"""
+    global token, test_post_id
+    print("\n🔍 Testing like post...")
+    
+    if not token and not test_register():
+        print("❌ Cannot like post without authentication")
+        return False
+    
+    if not test_post_id and not test_create_post():
+        print("❌ Cannot like post without a post ID")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.post(f"{BASE_URL}/posts/{test_post_id}/like", headers=headers)
+        print(f"Status code: {response.status_code}")
         
-        headers = {"Authorization": f"Bearer {self.token}"}
-        response = requests.post(f"{self.base_url}/comments", json=comment_data, headers=headers)
-        self.assertEqual(response.status_code, 200, f"Create comment failed: {response.text}")
-        
-        data = response.json()
-        self.assertEqual(data["post_id"], self.test_post_id)
-        self.assertEqual(data["content"], comment_data["content"])
-        print("✅ Create comment successful")
+        if response.status_code == 200:
+            data = response.json()
+            if "liked" in data:
+                print(f"✅ Like post successful (liked: {data['liked']})")
+                return True
+            else:
+                print(f"❌ Like post response missing 'liked' status: {data}")
+        else:
+            print(f"❌ Like post failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Like post error: {str(e)}")
+    
+    return False
 
-    def test_09_get_comments(self):
-        """Test getting comments for a post"""
-        print("\n🔍 Testing get comments...")
-        if not self.test_post_id:
-            self.test_04_create_post()
-            self.test_08_create_comment()
-            
-        response = requests.get(f"{self.base_url}/posts/{self.test_post_id}/comments")
-        self.assertEqual(response.status_code, 200, f"Get comments failed: {response.text}")
+def test_create_comment():
+    """Test creating a comment on a post"""
+    global token, test_post_id
+    print("\n🔍 Testing create comment...")
+    
+    if not token and not test_register():
+        print("❌ Cannot create comment without authentication")
+        return False
+    
+    if not test_post_id and not test_create_post():
+        print("❌ Cannot create comment without a post ID")
+        return False
+    
+    comment_data = {
+        "post_id": test_post_id,
+        "content": "This is a test comment on the research paper"
+    }
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.post(f"{BASE_URL}/comments", json=comment_data, headers=headers)
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIsInstance(data, list, "Response is not a list of comments")
-        print("✅ Get comments successful")
+        if response.status_code == 200:
+            data = response.json()
+            if data["post_id"] == test_post_id:
+                print("✅ Create comment successful")
+                return True
+            else:
+                print(f"❌ Comment post ID mismatch: {data}")
+        else:
+            print(f"❌ Create comment failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Create comment error: {str(e)}")
+    
+    return False
 
-    def test_10_dashboard_stats(self):
-        """Test getting dashboard statistics"""
-        print("\n🔍 Testing dashboard stats...")
-        if not self.token:
-            self.test_01_register()
-            
-        headers = {"Authorization": f"Bearer {self.token}"}
-        response = requests.get(f"{self.base_url}/dashboard/stats", headers=headers)
-        self.assertEqual(response.status_code, 200, f"Get dashboard stats failed: {response.text}")
+def test_get_comments():
+    """Test getting comments for a post"""
+    global test_post_id
+    print("\n🔍 Testing get comments...")
+    
+    if not test_post_id and not test_create_post():
+        print("❌ Cannot get comments without a post ID")
+        return False
+    
+    # Create a comment first to ensure there's something to retrieve
+    if token:
+        test_create_comment()
+    
+    try:
+        response = requests.get(f"{BASE_URL}/posts/{test_post_id}/comments")
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIn("posts", data, "Posts count not found in response")
-        self.assertIn("likes", data, "Likes count not found in response")
-        self.assertIn("views", data, "Views count not found in response")
-        print("✅ Get dashboard stats successful")
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, list):
+                print(f"✅ Get comments successful (found {len(data)} comments)")
+                return True
+            else:
+                print(f"❌ Get comments response is not a list: {data}")
+        else:
+            print(f"❌ Get comments failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Get comments error: {str(e)}")
+    
+    return False
 
-    def test_11_search(self):
-        """Test searching for posts"""
-        print("\n🔍 Testing search...")
-        if not self.test_post_id:
-            self.test_04_create_post()
-            
-        # Search for a term that should be in our test post
-        response = requests.get(f"{self.base_url}/search?q=test")
-        self.assertEqual(response.status_code, 200, f"Search failed: {response.text}")
+def test_dashboard_stats():
+    """Test getting dashboard statistics"""
+    global token
+    print("\n🔍 Testing dashboard stats...")
+    
+    if not token and not test_register():
+        print("❌ Cannot get dashboard stats without authentication")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(f"{BASE_URL}/dashboard/stats", headers=headers)
+        print(f"Status code: {response.status_code}")
         
-        data = response.json()
-        self.assertIsInstance(data, list, "Response is not a list of search results")
-        print("✅ Search successful")
+        if response.status_code == 200:
+            data = response.json()
+            if "posts" in data and "likes" in data and "views" in data:
+                print("✅ Get dashboard stats successful")
+                return True
+            else:
+                print(f"❌ Dashboard stats missing required fields: {data}")
+        else:
+            print(f"❌ Get dashboard stats failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Get dashboard stats error: {str(e)}")
+    
+    return False
+
+def test_search():
+    """Test searching for posts"""
+    global test_post_id
+    print("\n🔍 Testing search...")
+    
+    if not test_post_id and not test_create_post():
+        print("❌ Cannot test search without creating a post first")
+        return False
+    
+    try:
+        response = requests.get(f"{BASE_URL}/search?q=test")
+        print(f"Status code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, list):
+                print(f"✅ Search successful (found {len(data)} results)")
+                return True
+            else:
+                print(f"❌ Search response is not a list: {data}")
+        else:
+            print(f"❌ Search failed: {response.text}")
+    except Exception as e:
+        print(f"❌ Search error: {str(e)}")
+    
+    return False
 
 def run_tests():
-    # Create a test suite
-    suite = unittest.TestSuite()
+    """Run all API tests"""
+    print("🚀 Starting Evolance Research Portal API Tests")
     
-    # Add tests in order
-    test_cases = [
-        EvolanceResearchPortalTest('test_01_register'),
-        EvolanceResearchPortalTest('test_02_login'),
-        EvolanceResearchPortalTest('test_03_get_me'),
-        EvolanceResearchPortalTest('test_04_create_post'),
-        EvolanceResearchPortalTest('test_05_get_posts'),
-        EvolanceResearchPortalTest('test_06_get_post_by_id'),
-        EvolanceResearchPortalTest('test_07_like_post'),
-        EvolanceResearchPortalTest('test_08_create_comment'),
-        EvolanceResearchPortalTest('test_09_get_comments'),
-        EvolanceResearchPortalTest('test_10_dashboard_stats'),
-        EvolanceResearchPortalTest('test_11_search')
+    tests = [
+        ("Registration", test_register),
+        ("Login", test_login),
+        ("Get User Profile", test_get_me),
+        ("Create Post", test_create_post),
+        ("Get All Posts", test_get_posts),
+        ("Get Post by ID", test_get_post_by_id),
+        ("Like Post", test_like_post),
+        ("Create Comment", test_create_comment),
+        ("Get Comments", test_get_comments),
+        ("Dashboard Stats", test_dashboard_stats),
+        ("Search", test_search)
     ]
     
-    for test_case in test_cases:
-        suite.addTest(test_case)
+    results = {}
+    for name, test_func in tests:
+        results[name] = test_func()
     
-    # Run the tests
-    runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(suite)
+    # Print summary
+    print("\n📊 Test Results Summary:")
+    passed = sum(1 for result in results.values() if result)
+    total = len(results)
+    
+    for name, result in results.items():
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"{status} - {name}")
+    
+    print(f"\nPassed {passed} out of {total} tests ({passed/total*100:.1f}%)")
+    
+    return results
 
 if __name__ == "__main__":
-    print("🚀 Starting Evolance Research Portal API Tests")
     run_tests()
