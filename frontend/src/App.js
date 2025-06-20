@@ -522,6 +522,8 @@ const AuthForm = ({ isLogin = true }) => {
 const Dashboard = () => {
   const { user } = React.useContext(AuthContext);
   const [stats, setStats] = useState({ posts: 0, likes: 0, views: 0 });
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [, setCurrentView] = React.useContext(ViewContext);
 
   useEffect(() => {
     fetchStats();
@@ -536,6 +538,8 @@ const Dashboard = () => {
     }
   };
 
+  const isFounder = user?.email === 'founder@evolance.info';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 py-12">
       <div className="max-w-6xl mx-auto px-4">
@@ -543,13 +547,20 @@ const Dashboard = () => {
           <h1 className="text-4xl font-bold text-white mb-4">
             Welcome, {user?.full_name || user?.username}!
           </h1>
-          <p className="text-gray-400 text-lg">Your research journey dashboard</p>
+          <p className="text-gray-400 text-lg">
+            {isFounder ? 'Founder Dashboard - Research Portal Administration' : 'Your research journey dashboard'}
+          </p>
+          {isFounder && (
+            <div className="mt-4 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/50 rounded-lg inline-block">
+              <span className="text-cyan-400 font-semibold">👑 Founder Access</span>
+            </div>
+          )}
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 rounded-xl p-6 text-center">
             <div className="text-3xl font-bold text-cyan-400 mb-2">{stats.posts}</div>
-            <div className="text-gray-300">Published Posts</div>
+            <div className="text-gray-300">Published {isFounder ? 'Content' : 'Posts'}</div>
           </div>
           <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-6 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">{stats.likes}</div>
@@ -562,18 +573,50 @@ const Dashboard = () => {
         </div>
 
         <div className="bg-gray-800/50 backdrop-blur-lg border border-gray-700/50 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Quick Actions</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">
+            {isFounder ? 'Founder Actions' : 'Quick Actions'}
+          </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <button className="p-6 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-lg text-left hover:border-cyan-400 transition-all">
-              <div className="text-lg font-semibold text-white mb-2">Create New Blog Post</div>
-              <div className="text-gray-400">Share your insights with the community</div>
-            </button>
-            <button className="p-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg text-left hover:border-purple-400 transition-all">
-              <div className="text-lg font-semibold text-white mb-2">Publish Research Paper</div>
-              <div className="text-gray-400">Contribute to scientific knowledge</div>
-            </button>
+            {!isFounder && (
+              <button 
+                onClick={() => setShowCreateForm('blog')}
+                className="p-6 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-lg text-left hover:border-cyan-400 transition-all"
+              >
+                <div className="text-lg font-semibold text-white mb-2">Create New Blog Post</div>
+                <div className="text-gray-400">Share your insights with the community</div>
+              </button>
+            )}
+            {isFounder && (
+              <>
+                <button 
+                  onClick={() => setShowCreateForm('research')}
+                  className="p-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg text-left hover:border-purple-400 transition-all"
+                >
+                  <div className="text-lg font-semibold text-white mb-2">📄 Publish Research Paper</div>
+                  <div className="text-gray-400">Contribute to Evolance's scientific knowledge</div>
+                </button>
+                <button 
+                  onClick={() => setShowCreateForm('blog')}
+                  className="p-6 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-lg text-left hover:border-cyan-400 transition-all"
+                >
+                  <div className="text-lg font-semibold text-white mb-2">✍️ Create Blog Post</div>
+                  <div className="text-gray-400">Share insights with the community</div>
+                </button>
+              </>
+            )}
           </div>
         </div>
+
+        {showCreateForm && (
+          <CreatePostForm 
+            postType={showCreateForm} 
+            onClose={() => setShowCreateForm(false)}
+            onSuccess={() => {
+              setShowCreateForm(false);
+              fetchStats();
+            }}
+          />
+        )}
       </div>
     </div>
   );
