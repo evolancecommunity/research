@@ -309,7 +309,7 @@ const DNABackground = () => (
 
 const InfinityLogo = () => (
   <svg
-    className="w-16 h-10 ml-4"
+    className="w-20 h-10 ml-6"
     viewBox="0 0 120 60"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -505,10 +505,7 @@ const Hero = () => {
               
               {/* Orbiting elements representing research concepts */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🧬</div>
-                  <div className="text-cyan-400 font-semibold">DNA of Consciousness</div>
-                </div>
+                <PhilosophicalText />
               </div>
               
               {/* Rotating ring */}
