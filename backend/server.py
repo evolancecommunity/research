@@ -168,6 +168,11 @@ async def register(user_data: UserCreate):
     
     # Create user
     user_dict = user_data.dict(exclude={"password"})
+    
+    # Set admin status for founder
+    if user_data.email == "founder@evolance.info":
+        user_dict["is_admin"] = True
+    
     user = User(**user_dict)
     
     # Store user in database
