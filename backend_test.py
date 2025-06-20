@@ -5,8 +5,11 @@ import json
 # Use the public endpoint from the frontend .env file
 BASE_URL = "https://709b9927-487e-4c91-8a1f-4ff2ea2c9757.preview.emergentagent.com/api"
 token = None
+founder_token = None
 user_data = None
+founder_data = None
 test_post_id = None
+test_research_id = None
 
 # Generate unique test user
 timestamp = int(time.time())
@@ -16,6 +19,15 @@ test_user = {
     "full_name": "Test User",
     "password": "TestPassword123!",
     "bio": "This is a test user for API testing"
+}
+
+# Founder user
+founder_user = {
+    "email": "founder@evolance.info",
+    "username": f"founder_{timestamp}",
+    "full_name": "Indraneel Bhattacharjee",
+    "password": "FounderPass123!",
+    "bio": "Founder of Evolance"
 }
 
 def test_register():
