@@ -482,18 +482,26 @@ const Hero = () => {
               <p className="text-gray-400 text-sm mt-2">— Evolance Research Mission</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button 
+              <button
                 onClick={() => setCurrentView('research')}
                 className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all transform hover:scale-105"
               >
                 Explore Research Papers
               </button>
-              <button 
+              <button
                 onClick={() => setCurrentView('blogs')}
                 className="px-8 py-4 border-2 border-cyan-400 rounded-lg text-cyan-400 font-semibold hover:bg-cyan-400 hover:text-black transition-all"
               >
                 Read Blog Insights
               </button>
+              <a
+                href="https://evolance.info"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 border-2 border-purple-400 rounded-lg text-purple-400 font-semibold hover:bg-purple-400 hover:text-black transition-all text-center"
+              >
+                Visit Evolance.info
+              </a>
             </div>
           </div>
           
@@ -703,6 +711,26 @@ const PostList = ({ postType = null }) => {
     </div>
   );
 };
+
+const GrantSection = () => (
+  <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="bg-gradient-to-br from-purple-700/40 to-cyan-700/40 border border-purple-500/30 rounded-xl p-8 text-center">
+      <h2 className="text-3xl font-bold text-white mb-4">Seeking Research Grants</h2>
+      <p className="text-gray-300 mb-4">
+        Tech-for-the-Good thrives when caring people invest in communities longing for empowerment.
+      </p>
+      <p className="text-gray-300 mb-6">
+        Your support helps us explore compassionate solutions and offer tools that uplift those in need.
+      </p>
+      <a
+        href="mailto:info@evolance.info"
+        className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all"
+      >
+        Contact Us About Grants
+      </a>
+    </div>
+  </div>
+);
 
 const AuthForm = ({ isLogin = true }) => {
   const [formData, setFormData] = useState({
@@ -1059,6 +1087,7 @@ function App() {
       default: return (
         <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 min-h-screen">
           <Hero />
+          <GrantSection />
           <PostList />
         </div>
       );

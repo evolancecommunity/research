@@ -2,8 +2,9 @@ import requests
 import time
 import json
 
-# Use the public endpoint from the frontend .env file
-BASE_URL = "https://709b9927-487e-4c91-8a1f-4ff2ea2c9757.preview.emergentagent.com/api"
+# Base URL for API tests
+import os
+BASE_URL = os.getenv("BASE_URL", "https://evolance.info/api")
 token = None
 founder_token = None
 user_data = None
