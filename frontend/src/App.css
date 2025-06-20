@@ -1,38 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for futuristic UI */
 .App {
-    text-align: center;
+  @apply text-white bg-gray-900;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-cyan-500 to-purple-500 rounded-full;
 }
 
-.App-link {
-    color: #61dafb;
+::-webkit-scrollbar-thumb:hover {
+  @apply from-cyan-400 to-purple-400;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Glassmorphism effects */
+.glass {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20;
+}
+
+/* Hover animations */
+.hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Glow effects */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* Animated backgrounds */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Custom gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent;
+}
+
+/* Pulsing animation for icons */
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(34, 211, 238, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.8), 0 0 30px rgba(168, 85, 247, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Futuristic button styles */
+.btn-futuristic {
+  @apply relative overflow-hidden bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg font-semibold transition-all duration-300;
+  box-shadow: 0 4px 15px 0 rgba(34, 211, 238, 0.3);
+}
+
+.btn-futuristic:hover {
+  @apply from-cyan-700 to-purple-700 transform scale-105;
+  box-shadow: 0 6px 20px 0 rgba(34, 211, 238, 0.4);
+}
+
+.btn-futuristic::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full;
+  transition: transform 0.6s;
+}
+
+.btn-futuristic:hover::before {
+  @apply translate-x-full;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:transform hover:scale-105;
+}
+
+.card-hover:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 211, 238, 0.2);
+}
+
+/* Typography enhancements */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Loading spinner */
+@keyframes spin-glow {
+  0% { 
+    transform: rotate(0deg);
+    border-top-color: #22d3ee;
+  }
+  25% { 
+    border-top-color: #a855f7;
+  }
+  50% { 
+    transform: rotate(180deg);
+    border-top-color: #ec4899;
+  }
+  75% { 
+    border-top-color: #10b981;
+  }
+  100% { 
+    transform: rotate(360deg);
+    border-top-color: #22d3ee;
+  }
+}
+
+.loading-spinner {
+  animation: spin-glow 1s linear infinite;
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .hero-title {
+    @apply text-4xl;
+  }
+  
+  .card-grid {
+    @apply grid-cols-1;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-cyan-500/30 text-white;
+}
+
+::-moz-selection {
+  @apply bg-cyan-500/30 text-white;
 }
