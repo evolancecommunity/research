@@ -139,7 +139,17 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     user = await db.users.find_one({"id": user_id})
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
-    return User(**user)
+    
+    user_obj = User(**user)
+    return user_obj
+
+async def get_admin_user(current_user: User = Depends(get_current_user)):
+    if not current_user.is_founder:
+        raise HTTPException(
+            status_code=403, 
+            detail="Access denied. Only founder@evolance.info can perform this action."
+        )
+    return current_user
 
 def calculate_reading_time(content: str) -> int:
     words = len(content.split())
