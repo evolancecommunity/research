@@ -44,9 +44,14 @@ class User(BaseModel):
     username: str
     full_name: str
     is_active: bool = True
+    is_admin: bool = False
     created_at: datetime = Field(default_factory=datetime.utcnow)
     avatar_url: Optional[str] = None
     bio: Optional[str] = None
+
+    @property
+    def is_founder(self):
+        return self.email == "founder@evolance.info"
 
 class UserCreate(BaseModel):
     email: EmailStr
