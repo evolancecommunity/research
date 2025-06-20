@@ -192,60 +192,230 @@ const Header = () => {
   );
 };
 
-const Hero = () => (
-  <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center">
-    {/* Animated background */}
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute -inset-10 opacity-50">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-cyan-400/30 to-purple-600/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-purple-400/20 to-pink-600/20 rounded-full blur-3xl animate-bounce"></div>
-      </div>
-    </div>
-
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6">
-            Evolance
-            <span className="block bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent text-4xl lg:text-5xl mt-2">
-              Research Portal
-            </span>
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-            Empowering humanity through inner transformation. Discover cutting-edge research on vibrational intelligence, 
-            emotional cognition, and AI-supported personal development that bridges science, psychology, and spirituality.
-          </p>
-          <div className="bg-gray-800/50 backdrop-blur-lg border border-cyan-500/30 rounded-lg p-6 mb-8">
-            <p className="text-cyan-300 text-lg font-medium">
-              "Inner work, when supported by intelligent technology, is not only a personal choice but a national imperative."
-            </p>
-            <p className="text-gray-400 text-sm mt-2">— Evolance Research Mission</p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <button className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all transform hover:scale-105">
-              Explore Research Papers
-            </button>
-            <button className="px-8 py-4 border-2 border-cyan-400 rounded-lg text-cyan-400 font-semibold hover:bg-cyan-400 hover:text-black transition-all">
-              Read Blog Insights
-            </button>
-          </div>
-        </div>
-        
-        <div className="relative">
-          <img 
-            src="https://images.pexels.com/photos/4389795/pexels-photo-4389795.jpeg" 
-            alt="Futuristic Research - Evolance"
-            className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-          />
-          <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-r from-cyan-400/20 to-purple-600/20 rounded-full blur-xl"></div>
-          <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
-            <span className="text-cyan-400 text-sm font-semibold">Founder: Indraneel Bhattacharjee</span>
-          </div>
-        </div>
-      </div>
-    </div>
+const DNABackground = () => (
+  <div className="absolute inset-0 overflow-hidden opacity-20">
+    <svg
+      className="absolute inset-0 w-full h-full"
+      viewBox="0 0 1200 800"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="dnaGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.8">
+            <animate attributeName="stop-opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.6">
+            <animate attributeName="stop-opacity" values="0.6;0.3;0.6" dur="3s" repeatCount="indefinite" />
+          </stop>
+        </linearGradient>
+        <linearGradient id="dnaGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.7">
+            <animate attributeName="stop-opacity" values="0.4;0.7;0.4" dur="2.5s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="100%" stopColor="#00f5ff" stopOpacity="0.5">
+            <animate attributeName="stop-opacity" values="0.5;0.2;0.5" dur="2.5s" repeatCount="indefinite" />
+          </stop>
+        </linearGradient>
+      </defs>
+      
+      {/* DNA Helix Animation */}
+      <g>
+        {Array.from({ length: 40 }, (_, i) => {
+          const x = (i * 30) - 200;
+          const y1 = 200 + Math.sin(i * 0.3) * 100;
+          const y2 = 200 + Math.sin(i * 0.3 + Math.PI) * 100;
+          return (
+            <g key={i}>
+              <circle cx={x} cy={y1} r="4" fill="url(#dnaGradient1)">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="10s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle cx={x} cy={y2} r="4" fill="url(#dnaGradient2)">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="10s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <line x1={x} y1={y1} x2={x} y2={y2} stroke="url(#dnaGradient1)" strokeWidth="1" opacity="0.6">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="10s"
+                  repeatCount="indefinite"
+                />
+              </line>
+            </g>
+          );
+        })}
+      </g>
+      
+      {/* Second DNA strand */}
+      <g>
+        {Array.from({ length: 40 }, (_, i) => {
+          const x = (i * 30) - 200;
+          const y1 = 500 + Math.sin(i * 0.4 + 1) * 80;
+          const y2 = 500 + Math.sin(i * 0.4 + Math.PI + 1) * 80;
+          return (
+            <g key={`second-${i}`}>
+              <circle cx={x} cy={y1} r="3" fill="url(#dnaGradient2)">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="12s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle cx={x} cy={y2} r="3" fill="url(#dnaGradient1)">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="12s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <line x1={x} y1={y1} x2={x} y2={y2} stroke="url(#dnaGradient2)" strokeWidth="1" opacity="0.4">
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  values={`0,0; ${1200 + 200},0; 0,0`}
+                  dur="12s"
+                  repeatCount="indefinite"
+                />
+              </line>
+            </g>
+          );
+        })}
+      </g>
+    </svg>
   </div>
 );
+
+const InfinityLogo = () => (
+  <svg
+    className="w-12 h-8 ml-3"
+    viewBox="0 0 100 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <linearGradient id="infinityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#00f5ff">
+          <animate attributeName="stop-color" values="#00f5ff;#8b5cf6;#00f5ff" dur="3s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="50%" stopColor="#8b5cf6">
+          <animate attributeName="stop-color" values="#8b5cf6;#00f5ff;#8b5cf6" dur="3s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="100%" stopColor="#00f5ff">
+          <animate attributeName="stop-color" values="#00f5ff;#8b5cf6;#00f5ff" dur="3s" repeatCount="indefinite" />
+        </stop>
+      </linearGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge> 
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <path
+      d="M25 25 C 15 5, 5 5, 15 15 C 25 25, 25 25, 35 15 C 45 5, 55 5, 65 15 C 75 25, 75 25, 65 35 C 55 45, 45 45, 35 35 C 25 25, 25 25, 15 35 C 5 45, -5 45, 5 35 C 15 25, 15 25, 25 25"
+      stroke="url(#infinityGradient)"
+      strokeWidth="3"
+      fill="none"
+      filter="url(#glow)"
+    >
+      <animate
+        attributeName="stroke-width"
+        values="3;5;3"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+    </path>
+  </svg>
+);
+
+const Hero = () => {
+  const [, setCurrentView] = React.useContext(ViewContext);
+  
+  return (
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center">
+      {/* DNA Background Animation */}
+      <DNABackground />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="text-center lg:text-left">
+            <div className="flex items-center justify-center lg:justify-start mb-6">
+              <h1 className="text-5xl lg:text-7xl font-bold text-white">
+                Evolance
+              </h1>
+              <InfinityLogo />
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-6">
+              Research Portal
+            </h2>
+            <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+              Empowering humanity through inner transformation. Discover cutting-edge research on vibrational intelligence, 
+              emotional cognition, and AI-supported personal development that bridges science, psychology, and spirituality.
+            </p>
+            <div className="bg-gray-800/50 backdrop-blur-lg border border-cyan-500/30 rounded-lg p-6 mb-8">
+              <p className="text-cyan-300 text-lg font-medium">
+                "Inner work, when supported by intelligent technology, is not only a personal choice but a national imperative."
+              </p>
+              <p className="text-gray-400 text-sm mt-2">— Evolance Research Mission</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button 
+                onClick={() => setCurrentView('research')}
+                className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all transform hover:scale-105"
+              >
+                Explore Research Papers
+              </button>
+              <button 
+                onClick={() => setCurrentView('blogs')}
+                className="px-8 py-4 border-2 border-cyan-400 rounded-lg text-cyan-400 font-semibold hover:bg-cyan-400 hover:text-black transition-all"
+              >
+                Read Blog Insights
+              </button>
+            </div>
+          </div>
+          
+          <div className="relative flex items-center justify-center">
+            <div className="w-96 h-96 relative">
+              {/* Central glowing orb */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/30 to-purple-600/30 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute inset-8 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full blur-2xl animate-bounce"></div>
+              
+              {/* Orbiting elements representing research concepts */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🧬</div>
+                  <div className="text-cyan-400 font-semibold">DNA of Consciousness</div>
+                </div>
+              </div>
+              
+              {/* Rotating ring */}
+              <div className="absolute inset-4 border-2 border-cyan-500/30 rounded-full animate-spin" style={{animationDuration: '20s'}}></div>
+              <div className="absolute inset-8 border border-purple-500/30 rounded-full animate-spin" style={{animationDuration: '15s', animationDirection: 'reverse'}}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PostCard = ({ post, onLike, onShare, isLiked }) => {
   const formatDate = (dateString) => {
