@@ -519,6 +519,124 @@ const AuthForm = ({ isLogin = true }) => {
   );
 };
 
+const CreatePostForm = ({ postType, onClose, onSuccess }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    summary: '',
+    tags: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const postData = {
+        title: formData.title,
+        content: formData.content,
+        post_type: postType,
+        summary: formData.summary || null,
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+      };
+
+      await axios.post(`${API}/posts`, postData);
+      onSuccess();
+    } catch (error) {
+      console.error('Failed to create post:', error);
+      alert('Failed to create post. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-gray-800/90 backdrop-blur-lg border border-gray-700/50 rounded-xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            {postType === 'research' ? '📄 Create Research Paper' : '✍️ Create Blog Post'}
+          </h2>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+            <input
+              type="text"
+              required
+              value={formData.title}
+              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors"
+              placeholder={postType === 'research' ? 'Research Paper Title' : 'Blog Post Title'}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Summary (Optional)</label>
+            <textarea
+              value={formData.summary}
+              onChange={(e) => setFormData({...formData, summary: e.target.value})}
+              rows="3"
+              className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors"
+              placeholder="Brief summary of your content..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Content</label>
+            <textarea
+              required
+              value={formData.content}
+              onChange={(e) => setFormData({...formData, content: e.target.value})}
+              rows="12"
+              className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors"
+              placeholder={postType === 'research' ? 'Enter your research paper content here...' : 'Write your blog post content here...'}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Tags (comma-separated)</label>
+            <input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => setFormData({...formData, tags: e.target.value})}
+              className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors"
+              placeholder="research, AI, psychology, spirituality"
+            />
+          </div>
+
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Publishing...' : `Publish ${postType === 'research' ? 'Research Paper' : 'Blog Post'}`}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-8 py-3 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const { user } = React.useContext(AuthContext);
   const [stats, setStats] = useState({ posts: 0, likes: 0, views: 0 });
