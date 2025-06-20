@@ -309,8 +309,8 @@ const DNABackground = () => (
 
 const InfinityLogo = () => (
   <svg
-    className="w-12 h-8 ml-3"
-    viewBox="0 0 100 50"
+    className="w-16 h-10 ml-4"
+    viewBox="0 0 120 60"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -335,21 +335,121 @@ const InfinityLogo = () => (
       </filter>
     </defs>
     <path
-      d="M25 25 C 15 5, 5 5, 15 15 C 25 25, 25 25, 35 15 C 45 5, 55 5, 65 15 C 75 25, 75 25, 65 35 C 55 45, 45 45, 35 35 C 25 25, 25 25, 15 35 C 5 45, -5 45, 5 35 C 15 25, 15 25, 25 25"
+      d="M30 30 C 20 10, 10 10, 20 20 C 30 30, 30 30, 40 20 C 50 10, 60 10, 70 20 C 80 30, 80 30, 70 40 C 60 50, 50 50, 40 40 C 30 30, 30 30, 20 40 C 10 50, 0 50, 10 40 C 20 30, 20 30, 30 30"
       stroke="url(#infinityGradient)"
-      strokeWidth="3"
+      strokeWidth="4"
       fill="none"
       filter="url(#glow)"
     >
       <animate
         attributeName="stroke-width"
-        values="3;5;3"
+        values="4;6;4"
         dur="2s"
         repeatCount="indefinite"
       />
     </path>
   </svg>
 );
+
+const PhilosophicalText = () => {
+  const fullText = "It's the PnC of possibilities releasing one of its combinations which reacts to transform in an intentional linear energy release. That release itself is inevitably reacting again to reverse AND move further in linearity, passing through a channel to help attain a form which can be materially touched, felt, and discarded back into 5 elements — earth, space, water, fire, and air.";
+  
+  return (
+    <div className="w-96 h-96 relative overflow-hidden">
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 400 400"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="textGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.9">
+              <animate attributeName="stop-opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.7">
+              <animate attributeName="stop-opacity" values="0.7;0.3;0.7" dur="4s" repeatCount="indefinite" />
+            </stop>
+          </linearGradient>
+          <filter id="textGlow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        {/* Central glowing orb */}
+        <circle cx="200" cy="200" r="80" fill="url(#textGradient1)" opacity="0.3">
+          <animate attributeName="r" values="60;100;60" dur="6s" repeatCount="indefinite" />
+        </circle>
+        
+        {/* Animated text paths in spiral */}
+        <defs>
+          <path id="spiral1" d="M 200 200 m -50 0 A 50 50 0 0 1 200 150 A 50 50 0 0 1 200 250 A 50 50 0 0 1 200 150" />
+          <path id="spiral2" d="M 200 200 m -70 0 A 70 70 0 0 1 200 130 A 70 70 0 0 1 200 270 A 70 70 0 0 1 200 130" />
+          <path id="spiral3" d="M 200 200 m -90 0 A 90 90 0 0 1 200 110 A 90 90 0 0 1 200 290 A 90 90 0 0 1 200 110" />
+          <path id="spiral4" d="M 200 200 m -110 0 A 110 110 0 0 1 200 90 A 110 110 0 0 1 200 310 A 110 110 0 0 1 200 90" />
+          <path id="spiral5" d="M 200 200 m -130 0 A 130 130 0 0 1 200 70 A 130 130 0 0 1 200 330 A 130 130 0 0 1 200 70" />
+        </defs>
+        
+        {/* Text along spiral paths */}
+        <text fontSize="10" fill="url(#textGradient1)" filter="url(#textGlow)" fontFamily="Arial, sans-serif">
+          <textPath href="#spiral1" startOffset="0%">
+            It's the PnC of possibilities releasing one of its combinations
+            <animate attributeName="startOffset" values="0%;100%;0%" dur="12s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        
+        <text fontSize="9" fill="url(#textGradient1)" filter="url(#textGlow)" fontFamily="Arial, sans-serif">
+          <textPath href="#spiral2" startOffset="25%">
+            which reacts to transform in an intentional linear energy release.
+            <animate attributeName="startOffset" values="25%;125%;25%" dur="14s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        
+        <text fontSize="8" fill="url(#textGradient1)" filter="url(#textGlow)" fontFamily="Arial, sans-serif">
+          <textPath href="#spiral3" startOffset="50%">
+            That release itself is inevitably reacting again to reverse
+            <animate attributeName="startOffset" values="50%;150%;50%" dur="16s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        
+        <text fontSize="8" fill="url(#textGradient1)" filter="url(#textGradient1)" fontFamily="Arial, sans-serif">
+          <textPath href="#spiral4" startOffset="75%">
+            AND move further in linearity, passing through a channel
+            <animate attributeName="startOffset" values="75%;175%;75%" dur="18s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        
+        <text fontSize="7" fill="url(#textGradient1)" filter="url(#textGlow)" fontFamily="Arial, sans-serif">
+          <textPath href="#spiral5" startOffset="0%">
+            to help attain a form which can be materially touched, felt, and discarded back into 5 elements — earth, space, water, fire, and air.
+            <animate attributeName="startOffset" values="0%;100%;0%" dur="20s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        
+        {/* Central elements representing the 5 elements */}
+        <g transform="translate(200,200)">
+          <text x="0" y="-30" textAnchor="middle" fontSize="12" fill="#8B7355" fontWeight="bold">🌍</text>
+          <text x="25" y="-10" textAnchor="middle" fontSize="12" fill="#1E40AF" fontWeight="bold">💧</text>
+          <text x="15" y="20" textAnchor="middle" fontSize="12" fill="#DC2626" fontWeight="bold">🔥</text>
+          <text x="-15" y="20" textAnchor="middle" fontSize="12" fill="#10B981" fontWeight="bold">💨</text>
+          <text x="-25" y="-10" textAnchor="middle" fontSize="12" fill="#7C3AED" fontWeight="bold">🌌</text>
+          
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values="0 200 200;360 200 200;0 200 200"
+            dur="30s"
+            repeatCount="indefinite"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
 
 const Hero = () => {
   const [, setCurrentView] = React.useContext(ViewContext);
