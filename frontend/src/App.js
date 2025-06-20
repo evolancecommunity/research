@@ -206,20 +206,27 @@ const Hero = () => (
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
           <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6">
-            Future of
-            <span className="block bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Research
+            Evolance
+            <span className="block bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent text-4xl lg:text-5xl mt-2">
+              Research Portal
             </span>
           </h1>
           <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-            Discover cutting-edge research papers, innovative blog posts, and join a community of forward-thinking researchers shaping tomorrow's breakthroughs.
+            Empowering humanity through inner transformation. Discover cutting-edge research on vibrational intelligence, 
+            emotional cognition, and AI-supported personal development that bridges science, psychology, and spirituality.
           </p>
+          <div className="bg-gray-800/50 backdrop-blur-lg border border-cyan-500/30 rounded-lg p-6 mb-8">
+            <p className="text-cyan-300 text-lg font-medium">
+              "Inner work, when supported by intelligent technology, is not only a personal choice but a national imperative."
+            </p>
+            <p className="text-gray-400 text-sm mt-2">— Evolance Research Mission</p>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-700 hover:to-purple-700 transition-all transform hover:scale-105">
-              Explore Research
+              Explore Research Papers
             </button>
             <button className="px-8 py-4 border-2 border-cyan-400 rounded-lg text-cyan-400 font-semibold hover:bg-cyan-400 hover:text-black transition-all">
-              Read Blogs
+              Read Blog Insights
             </button>
           </div>
         </div>
@@ -227,10 +234,13 @@ const Hero = () => (
         <div className="relative">
           <img 
             src="https://images.pexels.com/photos/4389795/pexels-photo-4389795.jpeg" 
-            alt="Futuristic Research"
+            alt="Futuristic Research - Evolance"
             className="w-full h-96 object-cover rounded-2xl shadow-2xl"
           />
           <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-r from-cyan-400/20 to-purple-600/20 rounded-full blur-xl"></div>
+          <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
+            <span className="text-cyan-400 text-sm font-semibold">Founder: Indraneel Bhattacharjee</span>
+          </div>
         </div>
       </div>
     </div>
