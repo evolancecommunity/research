@@ -338,7 +338,7 @@ const PostCard = ({ post, onLike, onShare, isLiked }) => {
 const PostList = ({ postType = null }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { isAuthenticated } = React.useContext(AuthContext);
+  const { isAuthenticated, user } = React.useContext(AuthContext);
 
   useEffect(() => {
     fetchPosts();
@@ -378,15 +378,32 @@ const PostList = ({ postType = null }) => {
     );
   }
 
+  const getTitle = () => {
+    if (postType === 'research') return 'Research Papers';
+    if (postType === 'blog') return 'Blog Posts';
+    return 'Latest Content';
+  };
+
+  const getDescription = () => {
+    if (postType === 'research') return 'Evolance research on inner transformation, vibrational intelligence, and AI-supported personal development';
+    if (postType === 'blog') return 'Insights and thoughts from the Evolance community';
+    return 'Discover cutting-edge insights and innovative ideas';
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-white mb-4">
-          {postType === 'research' ? 'Research Papers' : postType === 'blog' ? 'Blog Posts' : 'Latest Content'}
-        </h2>
-        <p className="text-gray-400 text-lg">
-          Discover cutting-edge insights and innovative ideas
-        </p>
+        <h2 className="text-4xl font-bold text-white mb-4">{getTitle()}</h2>
+        <p className="text-gray-400 text-lg">{getDescription()}</p>
+        
+        {postType === 'research' && (
+          <div className="mt-6 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 rounded-lg p-4 max-w-2xl mx-auto">
+            <p className="text-cyan-300 text-sm">
+              📄 Research papers are authored by Evolance founder Indraneel Bhattacharjee and explore the intersection of 
+              science, psychology, spirituality, and national interest in supporting human transformation.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -403,7 +420,11 @@ const PostList = ({ postType = null }) => {
       {posts.length === 0 && (
         <div className="text-center py-12">
           <div className="text-gray-400 text-lg">
-            No posts found. Be the first to share your research!
+            {postType === 'research' 
+              ? 'No research papers published yet. Check back soon for groundbreaking insights!' 
+              : postType === 'blog'
+              ? 'No blog posts found. Be the first to share your insights!'
+              : 'No posts found. Be the first to share your research!'}
           </div>
         </div>
       )}
