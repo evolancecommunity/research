@@ -210,6 +210,13 @@ async def get_me(current_user: User = Depends(get_current_user)):
 
 @api_router.post("/posts", response_model=Post)
 async def create_post(post_data: PostCreate, current_user: User = Depends(get_current_user)):
+    # Check if user can create research papers
+    if post_data.post_type == "research" and not current_user.is_founder:
+        raise HTTPException(
+            status_code=403, 
+            detail="Only founder@evolance.info can create research papers"
+        )
+    
     post_dict = post_data.dict()
     post_dict["author_id"] = current_user.id
     post_dict["author_name"] = current_user.full_name or current_user.username
