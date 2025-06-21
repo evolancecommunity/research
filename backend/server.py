@@ -37,6 +37,11 @@ app = FastAPI(title="Evolance Research Portal")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+@app.get("/ping")
+def ping():
+    """Health check endpoint."""
+    return {"message": "pong"}
+
 # Models
 class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

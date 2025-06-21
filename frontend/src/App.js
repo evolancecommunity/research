@@ -1077,6 +1077,13 @@ const ViewContext = React.createContext();
 function App() {
   const [currentView, setCurrentView] = useState('home');
 
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/ping`)
+      .then((res) => res.json())
+      .then((data) => console.log('API Response:', data))
+      .catch((err) => console.error('API error', err));
+  }, []);
+
   const renderCurrentView = () => {
     switch(currentView) {
       case 'login': return <AuthForm isLogin={true} />;
